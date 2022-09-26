@@ -36,10 +36,10 @@ func FindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, erro
 }
 
 // Count counts records
-func Count(tx *gorm.DB, cls *Clause) (int64, error) {
+func Count[T any](tx *gorm.DB, cls *Clause) (int64, error) {
 	tx = _buildClause(tx, cls)
 	var count int64
-	err := tx.Count(&count).Error
+	err := tx.Model(new(T)).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
@@ -57,7 +57,7 @@ func _buildClause(tx *gorm.DB, clause *Clause) *gorm.DB {
 func _buildFindAllOption(tx *gorm.DB, p *Pagination, s *Sort) *gorm.DB {
 	if p != nil {
 		if p.Page > 0 {
-			tx = tx.Offset(p.Page - 1*p.Size)
+			tx = tx.Offset((p.Page - 1) * p.Size)
 		}
 		if p.Size > 0 {
 			tx = tx.Limit(p.Size)
