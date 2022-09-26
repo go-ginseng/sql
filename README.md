@@ -129,7 +129,7 @@ db.Where(stm, values...).Find(&data)
 
 ## Generic Query Functions
 
-## FindOne
+### FindOne
 
 ```go
 // import "github.com/nelsonlai-go/sql"
@@ -137,7 +137,7 @@ db.Where(stm, values...).Find(&data)
 m, err := FindOne[Model](db, sql.Eq("id", 1))
 ```
 
-## FindAll
+### FindAll
 
 ```go
 // import "github.com/nelsonlai-go/sql"
@@ -149,10 +149,47 @@ ms, err := FindAll[Model](
     &sql.Sort{By: "id", Asc: true})
 ```
 
-## Count
+### Count
 
 ```go
 // import "github.com/nelsonlai-go/sql"
 
 count, err := Count[Model](db, sql.Eq("id", 1))
+```
+
+## Generic Write Functions
+
+### Create
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+m := &Model{Id: 1, Name: "name"}
+m, err := Create[Model](db, m)
+```
+
+### Update
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+m := &Model{Id: 1, Name: "name"}
+m, err := Update[Model](db, m)
+```
+
+### Delete
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+m := &Model{Id: 1, Name: "name"}
+err := Delete[Model](db, m)
+```
+
+### DeleteBy
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+err := DeleteBy[Model](db, sql.Eq("id", 1))
 ```
