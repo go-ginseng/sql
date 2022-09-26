@@ -46,3 +46,28 @@ if err != nil {
     panic(err)
 }
 ```
+
+## Encryption
+
+### AES encrypt and decrypt
+
+```go
+// import "github.com/nelsonlai-go/sql/encrypt"
+
+encryption, err := encrypt.NewAesEncrypt("aes key")
+data := "data to encrypt"
+
+// param: (plainText string)
+// return: (string, error)
+encrypted, err := encryption.Encrypt(data)
+if err != nil {
+    panic(err)
+}
+
+// param: (cipherText string)
+// return: (string, error)
+decrypted, err := encryption.Decrypt(encrypted)
+if err != nil {
+    panic(err)
+}
+```
