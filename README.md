@@ -126,3 +126,33 @@ cls := sql.Or(sql.Eq("id", 1), sql.Neq("name", "name"))
 stm, values := cls.Build()
 db.Where(stm, values...).Find(&data)
 ```
+
+## Generic Query Functions
+
+## FindOne
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+m, err := FindOne[Model](db, sql.Eq("id", 1))
+```
+
+## FindAll
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+ms, err := FindAll[Model](
+    db,
+    sql.Eq("id", 1),
+    &sql.Pagination{Page: 1, Size: 10},
+    &sql.Sort{By: "id", Asc: true})
+```
+
+## Count
+
+```go
+// import "github.com/nelsonlai-go/sql"
+
+count, err := Count[Model](db, sql.Eq("id", 1))
+```
