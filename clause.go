@@ -87,11 +87,11 @@ func Lte(field string, value interface{}) *Clause {
 	return _newClause(OP_LE, field, value)
 }
 
-func In(field string, values ...interface{}) *Clause {
+func In(field string, values interface{}) *Clause {
 	return _newClause(OP_IN, field, values)
 }
 
-func Nin(field string, values ...interface{}) *Clause {
+func Nin(field string, values interface{}) *Clause {
 	return _newClause(OP_NI, field, values)
 }
 
