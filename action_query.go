@@ -23,6 +23,17 @@ func FindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
 	return result, nil
 }
 
+// UnscopedFindOne finds one record including soft deleted records
+func UnscopedFindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
+	tx = _buildClause(tx, cls)
+	result := new(T)
+	err := tx.Unscoped().First(result).Error
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 // FindAll finds all records
 func FindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, error) {
 	tx = _buildClause(tx, cls)
@@ -35,11 +46,34 @@ func FindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, erro
 	return results, nil
 }
 
+// UnscopedFindAll finds all records including soft deleted records
+func UnscopedFindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, error) {
+	tx = _buildClause(tx, cls)
+	tx = _buildFindAllOption(tx, p, s)
+	results := make([]T, 0)
+	err := tx.Unscoped().Find(&results).Error
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
+}
+
 // Count counts records
 func Count[T any](tx *gorm.DB, cls *Clause) (int64, error) {
 	tx = _buildClause(tx, cls)
 	var count int64
 	err := tx.Model(new(T)).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+// UnscopedCount counts records including soft deleted records
+func UnscopedCount[T any](tx *gorm.DB, cls *Clause) (int64, error) {
+	tx = _buildClause(tx, cls)
+	var count int64
+	err := tx.Unscoped().Model(new(T)).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}

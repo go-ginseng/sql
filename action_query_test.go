@@ -9,7 +9,7 @@ import (
 )
 
 type TestTable struct {
-	gorm.Model
+	sql.Model
 	Name string
 	Age  int
 }
@@ -184,5 +184,63 @@ var _ = Describe("Sql Query", func() {
 		ts, err := sql.FindAll[TestTable](db, sql.Eq("name", "z"), nil, nil)
 		Expect(err).To(BeNil())
 		Expect(len(ts)).To(Equal(0))
+	})
+
+	It("should soft delete and find it with unscoped", func() {
+		t, err := sql.FindOne[TestTable](db, sql.Eq("name", "a"))
+		Expect(err).To(BeNil())
+		Expect(t).NotTo(BeNil())
+
+		err = sql.Delete(db, t)
+		Expect(err).To(BeNil())
+
+		t, err = sql.FindOne[TestTable](db, sql.Eq("name", "a"))
+		Expect(err).NotTo(BeNil())
+		Expect(t).To(BeNil())
+
+		t, err = sql.UnscopedFindOne[TestTable](db, sql.Eq("name", "a"))
+		Expect(err).To(BeNil())
+		Expect(t).NotTo(BeNil())
+		Expect(t.DeletedAt).NotTo(BeNil())
+	})
+
+	It("should soft delete and find all with unscoped", func() {
+		t, err := sql.FindOne[TestTable](db, sql.Eq("name", "a"))
+		Expect(err).To(BeNil())
+		Expect(t).NotTo(BeNil())
+
+		err = sql.Delete(db, t)
+		Expect(err).To(BeNil())
+
+		t2, err := sql.FindOne[TestTable](db, sql.Eq("name", "b"))
+		Expect(err).To(BeNil())
+		Expect(t2).NotTo(BeNil())
+
+		err = sql.Delete(db, t2)
+		Expect(err).To(BeNil())
+
+		ts, err := sql.UnscopedFindAll[TestTable](db, nil, nil, nil)
+		Expect(err).To(BeNil())
+		Expect(len(ts)).To(Equal(10))
+	})
+
+	It("should soft delete and count with unscoped", func() {
+		t, err := sql.FindOne[TestTable](db, sql.Eq("name", "a"))
+		Expect(err).To(BeNil())
+		Expect(t).NotTo(BeNil())
+
+		err = sql.Delete(db, t)
+		Expect(err).To(BeNil())
+
+		t2, err := sql.FindOne[TestTable](db, sql.Eq("name", "b"))
+		Expect(err).To(BeNil())
+		Expect(t2).NotTo(BeNil())
+
+		err = sql.Delete(db, t2)
+		Expect(err).To(BeNil())
+
+		count, err := sql.UnscopedCount[TestTable](db, nil)
+		Expect(err).To(BeNil())
+		Expect(count).To(Equal(int64(10)))
 	})
 })
