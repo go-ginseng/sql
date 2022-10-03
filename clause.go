@@ -22,7 +22,7 @@ const (
 
 type Clause struct {
 	OP       string      `json:"op"`
-	Field    string      `json:"field"`
+	Field    string      `json:"field,omitempty"`
 	Value    interface{} `json:"value,omitempty"`
 	Children []*Clause   `json:"children,omitempty"`
 }
