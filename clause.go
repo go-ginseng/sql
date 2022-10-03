@@ -21,10 +21,10 @@ const (
 )
 
 type Clause struct {
-	OP       string
-	Field    string
-	Value    interface{}
-	Children []*Clause
+	OP       string      `json:"op"`
+	Field    string      `json:"field"`
+	Value    interface{} `json:"value,omitempty"`
+	Children []*Clause   `json:"children,omitempty"`
 }
 
 func (c *Clause) Build() (string, []interface{}) {
