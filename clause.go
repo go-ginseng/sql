@@ -33,7 +33,7 @@ func (c *Clause) Build() (string, []interface{}) {
 
 func _build(clause *Clause, values []interface{}) (string, []interface{}) {
 	var stm string
-	switch clause.OP {
+	switch strings.ToUpper(clause.OP) {
 	case OP_AN:
 		stm, values = _processHasChildrenClause(clause, values)
 	case OP_OR:
