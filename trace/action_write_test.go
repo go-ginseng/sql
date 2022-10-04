@@ -1,9 +1,9 @@
 package trace_test
 
 import (
-	"github.com/nelsonlai-go/sql"
-	"github.com/nelsonlai-go/sql/conn"
-	"github.com/nelsonlai-go/sql/trace"
+	"github.com/go-ginseng/sql"
+	"github.com/go-ginseng/sql/conn"
+	"github.com/go-ginseng/sql/trace"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"gorm.io/gorm"

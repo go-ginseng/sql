@@ -3,7 +3,7 @@ package trace
 import (
 	"time"
 
-	"github.com/nelsonlai-go/sql"
+	"github.com/go-ginseng/sql"
 )
 
 type Model struct {

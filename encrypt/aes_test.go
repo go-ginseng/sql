@@ -1,7 +1,7 @@
 package encrypt_test
 
 import (
-	"github.com/nelsonlai-go/sql/encrypt"
+	"github.com/go-ginseng/sql/encrypt"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

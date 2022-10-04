@@ -1,8 +1,8 @@
 package sql_test
 
 import (
-	"github.com/nelsonlai-go/sql"
-	"github.com/nelsonlai-go/sql/conn"
+	"github.com/go-ginseng/sql"
+	"github.com/go-ginseng/sql/conn"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"gorm.io/gorm"

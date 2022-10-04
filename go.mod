@@ -1,10 +1,10 @@
-module github.com/nelsonlai-go/sql
+module github.com/go-ginseng/sql
 
 go 1.19
 
 require (
 	github.com/onsi/ginkgo/v2 v2.2.0
-	github.com/onsi/gomega v1.20.1
+	github.com/onsi/gomega v1.20.2
 	gorm.io/driver/mysql v1.3.6
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.10
