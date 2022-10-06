@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/go-ginseng/sql"
+	"gorm.io/gorm"
 )
 
 type Model struct {
@@ -49,6 +50,7 @@ func (m *Trace) SetTraceInfo(action string) {
 	m.ID = 0
 	m.CreatedAt = time.Now()
 	m.UpdatedAt = time.Now()
+	m.DeletedAt = gorm.DeletedAt{}
 	m.TraceTime = time.Now()
 	m.TraceAction = action
 }
