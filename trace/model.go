@@ -46,6 +46,9 @@ func (m *Trace) SetRecordID(id uint) {
 }
 
 func (m *Trace) SetTraceInfo(action string) {
+	m.ID = 0
+	m.CreatedAt = time.Now()
+	m.UpdatedAt = time.Now()
 	m.TraceTime = time.Now()
 	m.TraceAction = action
 }
