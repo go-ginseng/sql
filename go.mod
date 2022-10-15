@@ -1,4 +1,4 @@
-module github.com/go-ginseng/sql
+module github.com/nelsonlai-go/sql
 
 go 1.19
 

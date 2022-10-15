@@ -3,7 +3,7 @@ package trace
 import (
 	"time"
 
-	"github.com/go-ginseng/sql"
+	"github.com/nelsonlai-go/sql"
 	"gorm.io/gorm"
 )
 

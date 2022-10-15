@@ -1,7 +1,7 @@
 package sql_test
 
 import (
-	"github.com/go-ginseng/sql"
+	"github.com/nelsonlai-go/sql"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

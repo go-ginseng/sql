@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-go get -u github.com/go-ginseng/sql
+go get -u github.com/nelsonlai-go/sql
 ```
 
 ## Connection
@@ -11,7 +11,7 @@ go get -u github.com/go-ginseng/sql
 ### Connect to MySQL
 
 ```go
-// import "github.com/go-ginseng/sql/conn"
+// import "github.com/nelsonlai-go/sql/conn"
 
 // param: (host, port, username, password, database string, silent bool)
 // return: (*sql.DB, error)
@@ -24,7 +24,7 @@ if err != nil {
 ### Connect to disk-based SQLite
 
 ```go
-// import "github.com/go-ginseng/sql/conn"
+// import "github.com/nelsonlai-go/sql/conn"
 
 // param: (dsn string, silent bool)
 // return: (*sql.DB, error)
@@ -37,7 +37,7 @@ if err != nil {
 ### Connect to memory-based SQLite
 
 ```go
-// import "github.com/go-ginseng/sql/conn"
+// import "github.com/nelsonlai-go/sql/conn"
 
 // param: (shared, silent bool)
 // return: (*sql.DB, error)
@@ -52,7 +52,7 @@ if err != nil {
 ### AES encrypt and decrypt
 
 ```go
-// import "github.com/go-ginseng/sql/encrypt"
+// import "github.com/nelsonlai-go/sql/encrypt"
 
 encryption, err := encrypt.NewAesEncrypt("aes key")
 data := "data to encrypt"
@@ -75,7 +75,7 @@ if err != nil {
 ## Clause Builder
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 // id = ?
 cls := sql.Eq("id", 1)
@@ -132,7 +132,7 @@ db.Where(stm, values...).Find(&data)
 ### FindOne
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 m, err := FindOne[Model](db, sql.Eq("id", 1))
 ```
@@ -140,7 +140,7 @@ m, err := FindOne[Model](db, sql.Eq("id", 1))
 ### FindAll
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 ms, err := FindAll[Model](
     db,
@@ -152,7 +152,7 @@ ms, err := FindAll[Model](
 ### Count
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 count, err := Count[Model](db, sql.Eq("id", 1))
 ```
@@ -162,7 +162,7 @@ count, err := Count[Model](db, sql.Eq("id", 1))
 ### Create
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 m := &Model{Id: 1, Name: "name"}
 m, err := Create[Model](db, m)
@@ -171,7 +171,7 @@ m, err := Create[Model](db, m)
 ### Update
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 m := &Model{Id: 1, Name: "name"}
 m, err := Update[Model](db, m)
@@ -180,7 +180,7 @@ m, err := Update[Model](db, m)
 ### Delete
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 m := &Model{Id: 1, Name: "name"}
 err := Delete[Model](db, m)
@@ -189,7 +189,7 @@ err := Delete[Model](db, m)
 ### DeleteBy
 
 ```go
-// import "github.com/go-ginseng/sql"
+// import "github.com/nelsonlai-go/sql"
 
 err := DeleteBy[Model](db, sql.Eq("id", 1))
 ```
