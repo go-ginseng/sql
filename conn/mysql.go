@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// MySQL connects to MySQL database
-func MySql(
+// Connect to MySQL database
+func MySQL(
 	host string,
 	port string,
 	username string,
@@ -17,20 +17,20 @@ func MySql(
 	database string,
 	silent bool,
 ) (*gorm.DB, error) {
-	dsn := _buildMySqlDsn(host, port, username, password, database)
-	return _createMySqlDB(dsn, silent)
+	dsn := buildMySQL_DSN(host, port, username, password, database)
+	return createMySQLConnection(dsn, silent)
 }
 
-func _buildMySqlDsn(host string, port string, username string, password string, database string) string {
+func buildMySQL_DSN(host string, port string, username string, password string, database string) string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
 }
 
-func _createMySqlDB(dsn string, silent bool) (*gorm.DB, error) {
-	config := _getConfig(silent)
+func createMySQLConnection(dsn string, silent bool) (*gorm.DB, error) {
+	config := getConfig(silent)
 	return gorm.Open(mysql.Open(dsn), config)
 }
 
-func _getConfig(silent bool) *gorm.Config {
+func getConfig(silent bool) *gorm.Config {
 	config := &gorm.Config{}
 	if silent {
 		config.Logger = logger.Default.LogMode(logger.Silent)
