@@ -2,23 +2,28 @@ package encrypt
 
 import (
 	"crypto/aes"
-	"errors"
+	"crypto/cipher"
 )
 
-type aseEncryption struct {
+type AES interface {
+	Encrypt(raw string) []byte
+	Decrypt(encrypted []byte) string
+}
+
+type aesEncryption struct {
 	Key string
 }
 
-func NewAesEncryption(key string) Encryption {
-	return &aseEncryption{Key: key}
+func NewAES(encryptKey string) AES {
+	return &aesEncryption{
+		Key: encryptKey,
+	}
 }
 
-func (a *aseEncryption) Encrypt(plainText string) (string, error) {
-	if a.Key == "" {
-		return "", errors.New("aes key is empty")
-	}
-	src := []byte(plainText)
-	cipher, _ := aes.NewCipher(_generateKey([]byte(a.Key)))
+// Encrypt text with AES
+func (a *aesEncryption) Encrypt(raw string) []byte {
+	src := []byte(raw)
+	cipher := getCipher(a.Key)
 	length := (len(src) + aes.BlockSize) / aes.BlockSize
 	plain := make([]byte, length*aes.BlockSize)
 	copy(plain, src)
@@ -32,16 +37,12 @@ func (a *aseEncryption) Encrypt(plainText string) (string, error) {
 		cipher.Encrypt(encrypted[bs:be], plain[bs:be])
 	}
 
-	return string(encrypted), nil
+	return encrypted
 }
 
-func (a *aseEncryption) Decrypt(cipherText string) (string, error) {
-	if a.Key == "" {
-		return "", errors.New("aes key is empty")
-	}
-	cipher, _ := aes.NewCipher(_generateKey([]byte(a.Key)))
-
-	encrypted := []byte(cipherText)
+// Decrypt blob with AES
+func (a *aesEncryption) Decrypt(encrypted []byte) string {
+	cipher := getCipher(a.Key)
 
 	decrypted := make([]byte, len(encrypted))
 	for bs, be := 0, cipher.BlockSize(); bs < len(encrypted); bs, be = bs+cipher.BlockSize(), be+cipher.BlockSize() {
@@ -53,10 +54,22 @@ func (a *aseEncryption) Decrypt(cipherText string) (string, error) {
 		trim = len(decrypted) - int(decrypted[len(decrypted)-1])
 	}
 
-	return string(decrypted[:trim]), nil
+	return string(decrypted[:trim])
 }
 
-func _generateKey(key []byte) (genKey []byte) {
+func getCipher(key string) cipher.Block {
+	encryptKeyNotEmpty(key)
+	cipher, _ := aes.NewCipher(generateKey([]byte(key)))
+	return cipher
+}
+
+func encryptKeyNotEmpty(key string) {
+	if key == "" {
+		panic("aes key is empty")
+	}
+}
+
+func generateKey(key []byte) (genKey []byte) {
 	genKey = make([]byte, 16)
 	copy(genKey, key)
 	for i := 16; i < len(key); {
