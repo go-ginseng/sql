@@ -25,8 +25,8 @@ func Delete[T any](tx *gorm.DB, model *T) error {
 	return tx.Delete(model).Error
 }
 
-// DeleteBy deletes a record by clause
-func DeleteBy[T any](tx *gorm.DB, cls *Clause) error {
-	tx = _buildClause(tx, cls)
+// DeleteBy deletes a record by statement
+func DeleteBy[T any](tx *gorm.DB, stm *Statement) error {
+	tx = consumeStatement(tx, stm)
 	return tx.Delete(new(T)).Error
 }

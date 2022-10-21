@@ -3,8 +3,9 @@ package sql
 import "gorm.io/gorm"
 
 type Pagination struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
+	Page  int   `json:"page" form:"page"`
+	Size  int   `json:"size" form:"size"`
+	Total int64 `json:"total"`
 }
 
 type Sort struct {
@@ -13,8 +14,8 @@ type Sort struct {
 }
 
 // FindOne finds one record
-func FindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
-	tx = _buildClause(tx, cls)
+func FindOne[T any](tx *gorm.DB, stm *Statement) (*T, error) {
+	tx = consumeStatement(tx, stm)
 	result := new(T)
 	err := tx.First(result).Error
 	if err != nil {
@@ -24,8 +25,8 @@ func FindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
 }
 
 // UnscopedFindOne finds one record including soft deleted records
-func UnscopedFindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
-	tx = _buildClause(tx, cls)
+func UnscopedFindOne[T any](tx *gorm.DB, stm *Statement) (*T, error) {
+	tx = consumeStatement(tx, stm)
 	result := new(T)
 	err := tx.Unscoped().First(result).Error
 	if err != nil {
@@ -35,9 +36,9 @@ func UnscopedFindOne[T any](tx *gorm.DB, cls *Clause) (*T, error) {
 }
 
 // FindAll finds all records
-func FindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, error) {
-	tx = _buildClause(tx, cls)
-	tx = _buildFindAllOption(tx, p, s)
+func FindAll[T any](tx *gorm.DB, stm *Statement, p *Pagination, s *Sort) ([]T, error) {
+	tx = consumeStatement(tx, stm)
+	tx = consumePaginationAndSort(tx, p, s)
 	results := make([]T, 0)
 	err := tx.Find(&results).Error
 	if err != nil {
@@ -47,9 +48,9 @@ func FindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, erro
 }
 
 // UnscopedFindAll finds all records including soft deleted records
-func UnscopedFindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([]T, error) {
-	tx = _buildClause(tx, cls)
-	tx = _buildFindAllOption(tx, p, s)
+func UnscopedFindAll[T any](tx *gorm.DB, stm *Statement, p *Pagination, s *Sort) ([]T, error) {
+	tx = consumeStatement(tx, stm)
+	tx = consumePaginationAndSort(tx, p, s)
 	results := make([]T, 0)
 	err := tx.Unscoped().Find(&results).Error
 	if err != nil {
@@ -59,8 +60,8 @@ func UnscopedFindAll[T any](tx *gorm.DB, cls *Clause, p *Pagination, s *Sort) ([
 }
 
 // Count counts records
-func Count[T any](tx *gorm.DB, cls *Clause) (int64, error) {
-	tx = _buildClause(tx, cls)
+func Count[T any](tx *gorm.DB, stm *Statement) (int64, error) {
+	tx = consumeStatement(tx, stm)
 	var count int64
 	err := tx.Model(new(T)).Count(&count).Error
 	if err != nil {
@@ -70,8 +71,8 @@ func Count[T any](tx *gorm.DB, cls *Clause) (int64, error) {
 }
 
 // UnscopedCount counts records including soft deleted records
-func UnscopedCount[T any](tx *gorm.DB, cls *Clause) (int64, error) {
-	tx = _buildClause(tx, cls)
+func UnscopedCount[T any](tx *gorm.DB, stm *Statement) (int64, error) {
+	tx = consumeStatement(tx, stm)
 	var count int64
 	err := tx.Unscoped().Model(new(T)).Count(&count).Error
 	if err != nil {
@@ -80,15 +81,15 @@ func UnscopedCount[T any](tx *gorm.DB, cls *Clause) (int64, error) {
 	return count, nil
 }
 
-func _buildClause(tx *gorm.DB, clause *Clause) *gorm.DB {
-	if clause == nil {
+func consumeStatement(tx *gorm.DB, stm *Statement) *gorm.DB {
+	if stm == nil {
 		return tx
 	}
-	s, v := clause.Build()
+	s, v := stm.Build()
 	return tx.Where(s, v...)
 }
 
-func _buildFindAllOption(tx *gorm.DB, p *Pagination, s *Sort) *gorm.DB {
+func consumePaginationAndSort(tx *gorm.DB, p *Pagination, s *Sort) *gorm.DB {
 	if p != nil {
 		if p.Page > 0 {
 			tx = tx.Offset((p.Page - 1) * p.Size)
